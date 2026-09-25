@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clases de Guitarra Criolla</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="icon" href="logo.png">
+</head>
+<body class="bg-[#0a0a0a] text-white">
+
+<header class="text-center py-8 border-b border-yellow-900/30">
+  <img src="logo.png" alt="Logo Guitarra" class="w-40 h-40 mx-auto rounded-full shadow-2xl shadow-yellow-500/20">
+  <h1 class="mt-4 text-3xl font-serif tracking-widest text-yellow-100">Clases de Guitarra</h1>
+  <p class="text-zinc-400 text-sm">Guitarra Criolla • Clásica • Folclore</p>
+  <a href="https://wa.me/543734525075" class="inline-block mt-4 bg-yellow-500 text-black px-6 py-2 rounded-full font-bold">Reservar por WhatsApp</a>
+</header>
+
+<nav class="flex justify-center gap-2 p-4 sticky top-0 bg-[#0a0a0a]/90 backdrop-blur z-10">
+  <button onclick="show('clases')" id="b-clases" class="bg-yellow-500 text-black px-5 py-2 rounded-full font-bold">Clases</button>
+  <button onclick="show('juego1')" id="b-juego1" class="bg-zinc-800 px-5 py-2 rounded-full">Notas</button>
+  <button onclick="show('juego2')" id="b-juego2" class="bg-zinc-800 px-5 py-2 rounded-full">Acordes</button>
+</nav>
+
+<section id="clases" class="p-4 max-w-3xl mx-auto space-y-4">
+  <div class="bg-zinc-900 rounded-2xl p-5 border border-zinc-800">
+    <h2 class="font-bold text-xl text-yellow-200">Clase 1: G - C - D</h2>
+    <p class="text-zinc-400 text-sm mt-1">Con 3 acordes tocás chacareras, zambas y rock.</p>
+    <div class="grid grid-cols-3 gap-2 mt-4 font-mono">
+      <div class="bg-black p-3 rounded-xl text-center border border-zinc-800"><b class="text-yellow-400">G</b><br>320003</div>
+      <div class="bg-black p-3 rounded-xl text-center border border-zinc-800"><b class="text-yellow-400">C</b><br>x32033</div>
+      <div class="bg-black p-3 rounded-xl text-center border border-zinc-800"><b class="text-yellow-400">D</b><br>xx0232</div>
+    </div>
+  </div>
+  <div class="bg-zinc-900 rounded-2xl p-5">
+    <h2 class="font-bold">Práctica de 5 min</h2>
+    <div class="mt-3 space-y-2 text-sm">
+      <label class="flex gap-2"><input type="checkbox"> 1 min - 1-2-3-4 en cada cuerda</label>
+      <label class="flex gap-2"><input type="checkbox"> 2 min - Cambio G-C-D con metrónomo</label>
+      <label class="flex gap-2"><input type="checkbox"> 2 min - Rasgueo folclórico</label>
+    </div>
+  </div>
+</section>
+
+<section id="juego1" class="hidden p-4 max-w-3xl mx-auto">
+  <div class="bg-zinc-900 rounded-2xl p-6 text-center border border-zinc-800">
+    <h2 class="text-xl font-bold">Juego: ¿Dónde está?</h2>
+    <div id="notaObj" class="text-7xl font-black my-6 text-yellow-400">G</div>
+    <p>Puntos: <span id="pts">0</span></p>
+    <div id="diapas" class="mt-4 grid grid-cols-6 gap-1 bg-[#1c1209] p-3 rounded-xl"></div>
+    <button onclick="nuevaNota()" class="mt-4 bg-zinc-800 px-4 py-2 rounded-full">Saltar</button>
+  </div>
+</section>
+
+<section id="juego2" class="hidden p-4 max-w-3xl mx-auto">
+  <div class="bg-zinc-900 rounded-2xl p-6 text-center">
+    <h2 class="font-bold text-xl">Desafío de cambio</h2>
+    <p class="text-zinc-400">De <b id="a1">G</b> a <b id="a2">C</b></p>
+    <div id="timer" class="text-6xl font-mono my-8">0.0s</div>
+    <button id="btnC" onclick="cambio()" class="bg-yellow-500 text-black px-10 py-5 rounded-full font-black text-xl">¡CAMBIE!</button>
+  </div>
+</section>
+
+<script>
+function show(id){
+  document.querySelectorAll('section').forEach(s=>s.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+  document.querySelectorAll('nav button').forEach(b=>b.className='bg-zinc-800 px-5 py-2 rounded-full');
+  document.getElementById('b-'+id).className='bg-yellow-500 text-black px-5 py-2 rounded-full font-bold';
+}
+const notas=['E','F','G','A','B','C','D']; let pts=0;
+function nuevaNota(){document.getElementById('notaObj').innerText=notas[Math.floor(Math.random()*7)]}
+function init(){
+  const d=document.getElementById('diapas');
+  for(let i=0;i<30;i++){
+    let b=document.createElement('div');
+    b.className='h-10 bg-zinc-800 rounded flex items-center justify-center text-xs cursor-pointer hover:bg-zinc-700';
+    b.innerText=notas[i%7];
+    b.onclick=()=>{
+      if(b.innerText===document.getElementById('notaObj').innerText){pts+=10; document.getElementById('pts').innerText=pts; nuevaNota(); b.classList.add('bg-green-600')}
+      else b.classList.add('bg-red-600');
+    };
+    d.appendChild(b);
+  }
+}
+init(); nuevaNota();
+let est=true,ini;
+function cambio(){
+  if(est){ini=Date.now(); document.getElementById('btnC').innerText='¡AHORA C!'; est=false;}
+  else{let t=((Date.now()-ini)/1000).toFixed(1); document.getElementById('timer').innerText=t+'s'; document.getElementById('btnC').innerText='¡CAMBIE!'; est=true;}
+}
+</script>
+</body>
+</html>
